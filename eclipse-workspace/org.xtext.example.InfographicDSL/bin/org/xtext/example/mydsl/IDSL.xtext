@@ -1,0 +1,196 @@
+grammar org.xtext.example.mydsl.IDSL with org.eclipse.xtext.common.Terminals
+generate iDSL "http://www.xtext.org/example/mydsl/IDSL"
+
+Infographic : InfographicElementType;
+
+InfographicElementType: 
+	('type' ':' type='basic')?
+	& (('bgcolor' ':' bgcolor=Color) | ('bgpattern' ':' bgpattern=Pattern) | ('bgimage' ':' bgimage=ImageSrc))
+	& 'bgsize' ':' bgsize=SIZE_POS
+	& head=Head?
+	& boxes+=Box*
+	& texts+=Text*
+	& images+=Image*
+	& piecharts+=Piechart*
+	& barcharts+=Barchart*
+	& picturegraphs+=Picturegraph*
+	& foot=Foot?
+;
+
+// Head: off or nothing required
+Head:
+	name="head" ':' ('off' |
+	( BEGIN (
+		(('bgcolor' ':' bgcolor=Color) | ('bgpattern' ':' bgpattern=Pattern) | ('bgimage' ':' bgimage=ImageSrc))?
+		& ('size' ':' size=SIZE_POS)?	
+		& ('position' ':' position=SIZE_POS)?
+		& ('logo' ':' logo=Logo)?
+		& ('title' ':' title=Title)?
+		& ('subtitle' ':' subtitle=Title)?))
+	END );
+
+// Title & Subtitle: off or nothing required
+Title:
+	({Title} 'off' |
+	( BEGIN
+		{Title} (('align' ':' align=AlignPossibilities)?
+		& ('color' ':' color=Color)?
+		& ('font' ':' font=FONT)?
+		& ('position' ':' position=SIZE_POS)?
+		& ('maxwidth' ':' maxwidth=INT)?
+		& ('value' ':' value=STRING)?)) 
+	END );
+
+// Logo: Size & position required
+Logo:
+	BEGIN
+		(('size' ':' size=SIZE_POS)
+		& ('position' ':' position=SIZE_POS)) 
+	END;
+
+// Box(n): Position required
+Box: 
+	name=BOXID ':'
+	BEGIN
+		((('bgcolor' ':' bgcolor=Color) | ('bgpattern' ':' bgpattern=Pattern) | ('bgimage' ':' bgimage=ImageSrc))?
+		& ('size' ':' size=SIZE_POS)?
+		& ('position' ':' position=SIZE_POS))
+	END ;
+
+// Text(n): Position required
+Text: 
+	(name=TEXTID ':'
+	( BEGIN
+		(('align' ':' align=AlignPossibilities)?
+		& ('color' ':' color=Color)?
+		& ('font' ':' font=FONT)?
+		& ('lineheight' ':' lineheight=INT)?
+		& ('position' ':' position=SIZE_POS)
+		& ('maxwidth' ':' maxwidth=INT)?
+		& ('value' ':' value=STRING)?)
+	END )) |
+	(name=TITLETEXTID ':'
+	( BEGIN
+		(('align' ':' align=AlignPossibilities)?
+		& ('color' ':' color=Color)?
+		& ('font' ':' font=FONT)?
+		& ('position' ':' position=SIZE_POS)
+		& ('maxwidth' ':' maxwidth=INT)?
+		& ('value' ':' value=STRING)?)
+	END ))
+;
+
+// Image(n): Position, size and src required
+Image:
+	name=IMAGEID ':'
+	BEGIN
+		(('position' ':' position=SIZE_POS)
+		& ('size' ':' size=SIZE_POS)
+		& ('src' ':' src=ImageSrc))
+	END ;
+
+// Piechart(n): Data & position required
+Piechart:
+	name=PIECHARTID ':'
+	BEGIN
+		(('bgcolor' ':' color=Color)?
+		& ('colors' ':' colors=COLOR_CHARTS)?
+		& ('data' ':' BEGIN ChartData (piedata+=ChartData)* END)
+		& ('legendstyle' ':' legendstyle=LegendStyle)?
+		& ('padding' ':' padding=INT)?
+		& ('position' ':' position=SIZE_POS)
+		& ('showlegend' ':' showlegend=ShowOptionsOff)?
+		& ('showtitle' ':' showtitle=ShowOptionsOff)?
+		& ('showpercentage' ':' showpercentage=ShowOptionsOff)?
+		& ('size' ':' size=INT)?
+		& ('title' ':' title=STRING)?
+		& ('type' ':' type=PieType)?)
+	END ;
+
+// Barchart(n): Data & position required
+Barchart:
+	name=BARCHARTID ':'
+	BEGIN
+		(('bgcolor' ':' color=Color)?
+		& ('colors' ':' colors=COLOR_CHARTS)?
+		& ('data' ':' BEGIN ChartData (bardata+=ChartData)* END)
+		& ('gridscale' ':' gridscale=INT)?
+		& ('legendstyle' ':' legendstyle=LegendStyle)?
+		& ('padding' ':' padding=INT)?
+		& ('position' ':' position=SIZE_POS)
+		& ('showgrid' ':' showgrid=ShowOptionsOff)?
+		& ('showlegend' ':' showlegend=ShowOptionsOff)?
+		& ('showtitle' ':' showtitle=ShowOptionsOff)?
+		& ('size' ':' size=SIZE_POS)?
+		& ('title' ':' title=STRING)?
+		& ('type' ':' type=BarType)?)
+	END ;
+
+// Picturegraph(n): Data & position required
+Picturegraph:
+	name=PICTUREGRAPHID ':'
+	BEGIN
+		(('bgcolor' ':' color=Color)?
+		& ('colors' ':' colors=COLOR_CHARTS)?
+		& ('data' ':' BEGIN ChartData (picturegraphdata+=ChartData)* END)
+		& ('label' ':' label=STRING)?
+		& ('padding' ':' padding=INT)?
+		& ('position' ':' position=SIZE_POS)
+		& ('showlegend' ':' showlegend=ShowOptionsOff)?
+		& ('showtitle' ':' showtitle=ShowOptionsOff)?
+		& ('size' ':' size=SIZE_POS)?
+		& ('title' ':' title=STRING)?
+		& ('type' ':' type=PicturegraphType)?)
+	END
+;
+
+// Foot: off or nothing required
+Foot:
+	name="foot" ':' ('off' |
+	( BEGIN
+		(('bgcolor' ':' bgcolor=Color) | ('bgpattern' ':' bgpattern=Pattern) | ('bgimage' ':' bgimage=ImageSrc))?
+		& ('position' ':' position=SIZE_POS)? 
+		& ('size' ':' size=SIZE_POS)?
+		& ('text' ':' text=STRING)? )
+	END)
+;
+
+// SET BASIC RULES
+terminal SIZE_POS : INT'x'INT;
+
+Color : {Color} color=Color_Basic | {Color} COLOR_HEX;
+enum Color_Basic : c1='green' | c2='red' | c3='blue' | c4='yellow' | c5='black' | c6='white' | c7='orange' | c8='purple' | c9='pink';
+terminal COLOR_HEX : ('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F');
+terminal COLOR_CHARTS : (COLOR_HEX',')* COLOR_HEX;
+Pattern : ImageSrc | PATTERN_DB;
+ImageSrc : STRING;
+terminal PATTERN_DB : 'pattern'INT;
+
+FONT : (weight=Font_Weight)? FONT_SIZE family=Font_Family;
+enum Font_Weight : b1='bold ' | b2='100 ' | b3='200 ' | b4='300 ' | b5='400 ' | b6='500 ' | b7='600 ' | b8='700 ' | b9='800 ' | b10='900 ';
+terminal FONT_SIZE : ('0'..'9')+  'px ';
+enum Font_Family : font1='Arial' | font2='Verdana' | font3='Times New Roman' | font4='sans-serif' | font5='Gotham';
+enum AlignPossibilities: left | right | center;
+
+enum LegendStyle : legend1='1' | legend2='2';
+enum ShowOptionsOff : show1='off' | show2="n";
+enum PieType : type1="pie" | type2="donut";
+enum BarType : type1="horizontal" | type2="vertical";
+ChartData: STRING ':' STRING;
+enum PicturegraphType : type1="bin" | type2="electric";
+
+// Set ID numbering for each element
+terminal BOXID : 'box'INT;
+terminal TEXTID : 'text'INT;
+terminal TITLETEXTID : 'titletext'INT;
+terminal IMAGEID : 'image'INT;
+terminal PIECHARTID : 'piechart'INT;
+terminal BARCHARTID : 'barchart'INT;
+terminal PICTUREGRAPHID : 'picturegraph'INT;
+
+// White spacing 
+terminal BEGIN: 'synthetic:BEGIN';
+terminal END: 'synthetic:END';
+
+
+// TODO: restrict int to 2k (optional)
