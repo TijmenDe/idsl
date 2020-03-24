@@ -31,10 +31,9 @@ public class IDSLFormatter extends AbstractFormatter2 {
   private IDSLGrammarAccess _iDSLGrammarAccess;
   
   protected void _format(final Infographic infographic, @Extension final IFormattableDocument document) {
-    EList<InfographicElementType> _infographicElement = infographic.getInfographicElement();
-    for (final InfographicElementType infographicElementType : _infographicElement) {
-      document.<InfographicElementType>format(infographicElementType);
-    }
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field infographicElement is undefined for the type Infographic"
+      + "\nformat cannot be resolved");
   }
   
   protected void _format(final InfographicElementType infographicElementType, @Extension final IFormattableDocument document) {
@@ -67,28 +66,28 @@ public class IDSLFormatter extends AbstractFormatter2 {
     document.<Foot>format(infographicElementType.getFoot());
   }
   
-  public void format(final Object infographic, final IFormattableDocument document) {
-    if (infographic instanceof XtextResource) {
-      _format((XtextResource)infographic, document);
+  public void format(final Object infographicElementType, final IFormattableDocument document) {
+    if (infographicElementType instanceof XtextResource) {
+      _format((XtextResource)infographicElementType, document);
       return;
-    } else if (infographic instanceof Infographic) {
-      _format((Infographic)infographic, document);
+    } else if (infographicElementType instanceof InfographicElementType) {
+      _format((InfographicElementType)infographicElementType, document);
       return;
-    } else if (infographic instanceof InfographicElementType) {
-      _format((InfographicElementType)infographic, document);
+    } else if (infographicElementType instanceof Infographic) {
+      _format((Infographic)infographicElementType, document);
       return;
-    } else if (infographic instanceof EObject) {
-      _format((EObject)infographic, document);
+    } else if (infographicElementType instanceof EObject) {
+      _format((EObject)infographicElementType, document);
       return;
-    } else if (infographic == null) {
+    } else if (infographicElementType == null) {
       _format((Void)null, document);
       return;
-    } else if (infographic != null) {
-      _format(infographic, document);
+    } else if (infographicElementType != null) {
+      _format(infographicElementType, document);
       return;
     } else {
       throw new IllegalArgumentException("Unhandled parameter types: " +
-        Arrays.<Object>asList(infographic, document).toString());
+        Arrays.<Object>asList(infographicElementType, document).toString());
     }
   }
 }

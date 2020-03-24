@@ -3,6 +3,13 @@
  */
 package org.xtext.example.mydsl.ui.contentassist;
 
+import javax.inject.Inject;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.RuleCall;
+import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
+import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
+import org.eclipse.xtext.xbase.lib.Extension;
+import org.xtext.example.mydsl.services.IDSLGrammarAccess;
 import org.xtext.example.mydsl.ui.contentassist.AbstractIDSLProposalProvider;
 
 /**
@@ -11,4 +18,38 @@ import org.xtext.example.mydsl.ui.contentassist.AbstractIDSLProposalProvider;
  */
 @SuppressWarnings("all")
 public class IDSLProposalProvider extends AbstractIDSLProposalProvider {
+  @Inject
+  @Extension
+  private IDSLGrammarAccess ga;
+  
+  @Override
+  public void complete_Box(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
+    acceptor.accept(this.createCompletionProposal("boxX", "boxX \'Modify X to integer\'", this.getImage(this.ga.getBoxRule()), context));
+  }
+  
+  @Override
+  public void complete_Text(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
+    acceptor.accept(this.createCompletionProposal("textX", "textX \'Modify X to integer\'", this.getImage(this.ga.getTextRule()), context));
+    acceptor.accept(this.createCompletionProposal("titletextX", "titletext \'Modify X to integer\'", this.getImage(this.ga.getTextRule()), context));
+  }
+  
+  @Override
+  public void complete_Image(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
+    acceptor.accept(this.createCompletionProposal("imageX", "imageX \'Modify X to integer\'", this.getImage(this.ga.getImageRule()), context));
+  }
+  
+  @Override
+  public void complete_Piechart(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
+    acceptor.accept(this.createCompletionProposal("piechartX", "piechartX \'Modify X to integer\'", this.getImage(this.ga.getPiechartRule()), context));
+  }
+  
+  @Override
+  public void complete_Barchart(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
+    acceptor.accept(this.createCompletionProposal("barchartX", "barchartX \'Modify X to integer\'", this.getImage(this.ga.getBarchartRule()), context));
+  }
+  
+  @Override
+  public void complete_Picturegraph(final EObject model, final RuleCall ruleCall, final ContentAssistContext context, final ICompletionProposalAcceptor acceptor) {
+    acceptor.accept(this.createCompletionProposal("picturegraphX", "picturegraphX \'Modify X to integer\'", this.getImage(this.ga.getPicturegraphRule()), context));
+  }
 }

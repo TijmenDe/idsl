@@ -3,11 +3,40 @@
  */
 package org.xtext.example.mydsl.ui.contentassist
 
+import javax.inject.Inject
+import org.xtext.example.mydsl.services.IDSLGrammarAccess
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
+import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
+import org.eclipse.xtext.RuleCall
 
 /**
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#content-assist
  * on how to customize the content assistant.
  */
 class IDSLProposalProvider extends AbstractIDSLProposalProvider {
+	@Inject extension IDSLGrammarAccess ga
 	
+	override complete_Box(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		acceptor.accept(createCompletionProposal("boxX", "boxX 'Modify X to integer'", getImage(ga.boxRule), context));
+	}
+	
+	override complete_Text(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		acceptor.accept(createCompletionProposal("textX", "textX 'Modify X to integer'", getImage(ga.textRule), context));
+		acceptor.accept(createCompletionProposal("titletextX", "titletext 'Modify X to integer'", getImage(ga.textRule), context));
+	}
+	
+	override complete_Image(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		acceptor.accept(createCompletionProposal("imageX", "imageX 'Modify X to integer'", getImage(ga.imageRule), context));
+	}
+	
+	override complete_Piechart(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		acceptor.accept(createCompletionProposal("piechartX", "piechartX 'Modify X to integer'", getImage(ga.piechartRule), context));
+	}
+	override complete_Barchart(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		acceptor.accept(createCompletionProposal("barchartX", "barchartX 'Modify X to integer'", getImage(ga.barchartRule), context));
+	}
+	override complete_Picturegraph(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		acceptor.accept(createCompletionProposal("picturegraphX", "picturegraphX 'Modify X to integer'", getImage(ga.picturegraphRule), context));
+	}
 }
